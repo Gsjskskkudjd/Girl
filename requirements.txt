@@ -2,6 +2,6 @@ fastapi
 uvicorn
 ollama
 openai
-coqui-ai-tts
+edge-tts
 flask
 socketio
