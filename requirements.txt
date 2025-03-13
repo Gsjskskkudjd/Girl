@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+ollama
+openai
+coqui-ai-tts
+flask
+socketio
