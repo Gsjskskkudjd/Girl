@@ -17,8 +17,6 @@ RUN curl -fsSL https://ollama.ai/install.sh | sh
 RUN ollama pull mistral
 
 # Start Ollama in the background and then run FastAPI
-CMD ollama serve & uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-
 # Copy the rest of the application code
 COPY . .
 
