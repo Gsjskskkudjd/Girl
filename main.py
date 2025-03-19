@@ -1,16 +1,17 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-import openai
+import google.generativeai as genai
 import os
 import edge_tts
 import asyncio
-import uvicorn
 
-# Initialize FastAPI
+
 app = FastAPI()
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-# Fetch OpenAI API key from environment variables
-openai.api_key = os.getenv("OPENAI_API_KEY")
+
+
+# Initialize TTS Model (Coqui AI)
 
 # Request Model
 class ChatRequest(BaseModel):
@@ -23,16 +24,12 @@ def read_root():
 @app.post("/chat")
 async def chat_ai(request: ChatRequest):
     user_input = request.user_input
+    model = genai.GenerativeModel('gemini-pro')
+    response = model.generate_content(user_input)
+    
+    reply = response.text
+    return {"reply": reply}
 
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-4",  # Use "gpt-3.5-turbo" for cheaper requests
-            messages=[{"role": "user", "content": user_input}]
-        )
-
-        return {"reply": response["choices"][0]["message"]["content"]}
-    except Exception as e:
-        return {"error": str(e)}
 
 @app.post("/speak")
 async def speak_ai(request: ChatRequest):
@@ -44,6 +41,3 @@ async def speak_ai(request: ChatRequest):
     await communicate.save(audio_path)
 
     return {"audio_url": f"http://localhost:8000/{audio_path}"}
-
-if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
