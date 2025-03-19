@@ -4,13 +4,12 @@ import google.generativeai as genai
 import os
 import edge_tts
 import asyncio
+from dotenv import load_dotenv
+load_dotenv()
 
 
 app = FastAPI()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-
-
 # Initialize TTS Model (Coqui AI)
 
 # Request Model
