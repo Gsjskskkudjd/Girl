@@ -4,6 +4,7 @@ import google.generativeai as genai
 import os
 import edge_tts
 import asyncio
+import uvicorn
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -40,3 +41,5 @@ async def speak_ai(request: ChatRequest):
     await communicate.save(audio_path)
 
     return {"audio_url": f"http://localhost:8000/{audio_path}"}
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
